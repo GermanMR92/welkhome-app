@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\RestauranteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,10 +15,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/', [RestauranteController::class, 'index'])->name('home');
+
+Route::prefix('restaurante')->group(function() {
+    // Route::get('/getRestaurantes', [RestauranteController::class, 'getRestaurantes']);
+    // Route::get('/get/{id}', [RestauranteController::class, 'get']);
+    Route::get('/edit/{id}', [RestauranteController::class, 'edit'])->name('editForm');
+    // Route::post('/store', [RestauranteController::class, 'store']);
+    Route::get('/store/{id?}', [RestauranteController::class, 'store']);
+});
