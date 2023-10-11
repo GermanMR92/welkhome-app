@@ -16,6 +16,10 @@ class RestauranteController extends Controller
         $restaurantes = Restaurante::all();
         return view('home', compact('restaurantes'));
     }
+
+    public function new() {
+        return view('formulario');
+    }
     
     public function edit($id) {
         $restaurante = Restaurante::where('id', $id)->first();
@@ -42,6 +46,33 @@ class RestauranteController extends Controller
 
             dd($e->getMessage());
 
+        }
+    }
+
+    public function destroy($id) {
+        try {
+
+            $restaurante = Restaurante::find($id);
+
+            if(is_null($restaurante)) {
+                return response()->json([
+                    'title' => 'Error',
+                    'message' => 'No se ha encontrado el restaurante'
+                ], 404);
+            }
+
+            $restaurante->delete();
+
+            return response()->json([
+                'title' => '¡Eliminado!',
+                'message' => 'Se ha eliminado el registro correctamente'
+            ], 200);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'title' => 'Error',
+                'message' => 'Ha ocurrido un error -> '
+            ], 500);
         }
     }
 }
