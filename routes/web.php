@@ -24,7 +24,7 @@ Route::prefix('restaurante')->group(function() {
     // Route::get('/getRestaurantes', [RestauranteController::class, 'getRestaurantes']);
     // Route::get('/get/{id}', [RestauranteController::class, 'get']);
     Route::get('/edit/{id}', [RestauranteController::class, 'edit'])->name('editForm');
-    // Route::post('/store', [RestauranteController::class, 'store']);
-    Route::get('/store/{id?}', [RestauranteController::class, 'store']);
+    Route::post('/store', [RestauranteController::class, 'store']);
+    Route::post('/store/{id?}', [RestauranteController::class, 'store']);
     Route::delete('/destroy/{id}', [RestauranteController::class, 'destroy']);
 });

@@ -26,26 +26,33 @@ class RestauranteController extends Controller
         return view('formulario', compact('restaurante'));
     }
 
-    public function store(Request $request, $id) {
-
+    public function store(Request $request, $id = null) {
+        // dd($request->all(), $id);
         try {
             if(is_null($id)) {
+                $action = "creado";
                 $restaurante = new Restaurante();
             }else {
+                $action = "actualizado";
                 $restaurante = Restaurante::where('id', $id)->first();
             }
             
-            $campos = $request->only($restaurante->getFillable());
-            $restaurante->fill($campos);
+            $fields = $request->only($restaurante->getFillable());
+            $restaurante->fill($fields);
     
             is_null($id) ? $restaurante->save() : $restaurante->update();
 
-            return redirect()->route('home');
+            // return redirect()->route('home');
+            return response()->json([
+                'title' => ucfirst($action),
+                'message' => 'Se ha '. $action .' el registro correctamente'
+            ], 200);
             
         } catch (\Exception $e) {
-
-            dd($e->getMessage());
-
+            return response()->json([
+                'title' => 'Error',
+                'message' => 'Ha ocurrido un error'
+            ], 500);
         }
     }
 
@@ -71,7 +78,7 @@ class RestauranteController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'title' => 'Error',
-                'message' => 'Ha ocurrido un error -> '
+                'message' => 'Ha ocurrido un error'
             ], 500);
         }
     }
