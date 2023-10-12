@@ -20,7 +20,7 @@
                             </div>
                         @endif
 
-                        @include('restaurantes')
+                        @include('restaurantesTable')
                     </div>
                 </div>
             </div>

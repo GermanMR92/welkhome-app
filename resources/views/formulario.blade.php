@@ -23,6 +23,7 @@
             </div>
 
             <button type="submit" class="btn btn-primary" type="submit">Guardar</button>
+            <a type="button" href="/" class="btn btn-secondary">Volver</a>
         </form>
     </div>
 @endsection
