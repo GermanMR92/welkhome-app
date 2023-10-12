@@ -3,7 +3,7 @@
 @section('content')
     <div class="container">
         {{-- <form action="/restaurante/store/{{ $restaurante->id }}" method="put"> --}}
-        <form id="restaurante-form">
+        <form id="restaurante-form" class="w-50 mx-auto">
 
             <input type="hidden" id="restauranteId" value="{{@$restaurante->id}}">
 
@@ -22,8 +22,8 @@
                 <input class="form-control" type="tel" id="telefono" name="telefono" value="{{ @$restaurante->telefono }}" >
             </div>
 
-            <button type="submit" class="btn btn-primary" type="submit">Guardar</button>
-            <a type="button" href="/" class="btn btn-secondary">Volver</a>
+            <button type="submit" class="btn btn-primary w-100 mb-3" type="submit">Guardar</button>
+            <a type="button" href="/" class="btn btn-secondary w-100">Volver</a>
         </form>
     </div>
 @endsection

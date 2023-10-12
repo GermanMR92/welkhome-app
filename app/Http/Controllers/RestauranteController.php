@@ -50,7 +50,7 @@ class RestauranteController extends Controller
         $validator = Validator::make($request->all(), [
             'nombre' => 'required|max:75|min:3',
             'direccion' => 'required|max:150|min:3',
-            'telefono' => 'numeric|max:999999999999999' // 15 caracteres numéricos como máximo
+            'telefono' => 'nullable|numeric|max:999999999999999' // 15 caracteres numéricos como máximo
         ]);
 
         $validator->setCustomMessages($messages);

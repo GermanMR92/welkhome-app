@@ -15,6 +15,7 @@ use App\Http\Controllers\RestauranteController;
 |
 */
 
+// Ruta para la autenticacion (Libreria laravel/ui)
 Auth::routes();
 
 // Ruta principal con el listado de restaurantes
