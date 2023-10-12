@@ -58,13 +58,12 @@ class RestauranteController extends Controller
 
     public function destroy($id) {
         try {
-
             $restaurante = Restaurante::find($id);
 
             if(is_null($restaurante)) {
                 return response()->json([
                     'title' => 'Error',
-                    'message' => 'No se ha encontrado el restaurante'
+                    'error' => 'No se ha encontrado el restaurante'
                 ], 404);
             }
 
@@ -78,7 +77,7 @@ class RestauranteController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'title' => 'Error',
-                'message' => 'Ha ocurrido un error'
+                'error' => 'Ha ocurrido un error'
             ], 500);
         }
     }

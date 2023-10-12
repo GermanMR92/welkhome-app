@@ -13,8 +13,8 @@ const options = {
 
 document.addEventListener('DOMContentLoaded', function () {
 
-    // Funcion para eliminar un registro
-    window.deleteRecord = function (id) {
+    // Eliminar un registro
+    window.deleteRecord = (id) => {
         Swal.fire({
             title: '¿Estas segur@?',
             text: "Esta acción no se puede revertir",
@@ -24,45 +24,38 @@ document.addEventListener('DOMContentLoaded', function () {
             cancelButtonColor: '#d33',
             confirmButtonText: 'Eliminar',
             cancelButtonText: 'Cancelar'
-        }).then((result) => {
+        }).then(async (result) => {
             if (result.isConfirmed) {
+                try {
+                    options.method = 'DELETE';
+                    const response = await fetch(`/restaurante/destroy/${id}`, options)
+                    const data = await response.json();
 
-                options.method = 'DELETE';
+                    // Manejamos los errores
+                    if (!response.ok) {
+                        showError(data)
+                        return;
+                    }
 
-                fetch(`/restaurante/destroy/${id}`, options)
-                    .then(async response => {
-                        const isJson = response.headers.get('content-type')?.includes('application/json');
-                        const data = isJson && await response.json();
-
-                        // En caso de error lanzamos el catch
-                        if (!response.ok) {
-                            const error = (data) || response.status;
-                            return Promise.reject(error);
-                        }
-
-                        Swal.fire({
-                            title: data.title,
-                            text: data.message,
-                            confirmButtonText: 'OK',
-                            icon: 'success'
-                        }).then(()=> {
-                            document.getElementById(`table-row-${id}`).remove()
-                        });
-
-                    })
-                    .catch(error => {
-                        Swal.fire({
-                            title: error.title,
-                            text: error.message,
-                            icon: 'error'
-                        })
+                    // Se borra correctamente
+                    Swal.fire({
+                        title: data.title,
+                        text: data.message,
+                        confirmButtonText: 'OK234',
+                        icon: 'success'
+                    }).then(() => {
+                        document.getElementById(`table-row-${id}`).remove()
                     });
+
+                } catch (error) {
+                    showError(error)
+                }
             }
         });
     }
-    
+
     // Funcion para guardar un registro
-    restauranteForm.addEventListener('submit', function(e) {
+    restauranteForm.addEventListener('submit', function (e) {
         e.preventDefault()
 
         // Obtenemos los datos del formulario
@@ -85,7 +78,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const id = document.getElementById('restauranteId').value;
         let url = `/restaurante/store`;
         url = id != "" ? `${url}/${id}` : url;
-        
+
         fetch(url, options)
             .then(async response => {
                 const isJson = response.headers.get('content-type')?.includes('application/json');
@@ -102,8 +95,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     text: data.message,
                     confirmButtonText: 'OK',
                     icon: 'success'
-                }).then(()=> {
-                    location.href ="/";
+                }).then(() => {
+                    location.href = "/";
                 });
 
             })
@@ -117,3 +110,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     })
 });
+
+function showError(data) {
+    console.log(data);
+    let title = data.title ? data.title : "Error";
+    let error = data.error ? data.error : "Ha ocurrido un error inesperado";
+    Swal.fire({
+        title: title,
+        text: error,
+        icon: 'error'
+    })
+}
