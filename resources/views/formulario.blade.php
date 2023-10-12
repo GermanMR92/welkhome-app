@@ -22,7 +22,7 @@
                 <input class="form-control" type="tel" id="telefono" name="telefono" value="{{ @$restaurante->telefono }}" >
             </div>
 
-            <button type="submit" class="btn btn-primary" type="submit">Actualizar</button>
+            <button type="submit" class="btn btn-primary" type="submit">Guardar</button>
         </form>
     </div>
 @endsection

@@ -11,24 +11,29 @@ class RestauranteController extends Controller
     {
         $this->middleware('auth');
     }
+
+    // Redireccion al listado de restaurantes
     public function index()
     {
         $restaurantes = Restaurante::all();
         return view('home', compact('restaurantes'));
     }
 
+    // Redireccion al formulario
     public function new() {
         return view('formulario');
     }
     
+    // Redireccion al formulario con la instacia del restaurante
     public function edit($id) {
         $restaurante = Restaurante::where('id', $id)->first();
         return view('formulario', compact('restaurante'));
     }
 
+    // Creacion o edicion de un restaurante
     public function store(Request $request, $id = null) {
-        // dd($request->all(), $id);
         try {
+            // En caso de que el id sea nula creamos una instancia, de lo contrario buscamos en la BBDD el registro
             if(is_null($id)) {
                 $action = "creado";
                 $restaurante = new Restaurante();
@@ -36,13 +41,20 @@ class RestauranteController extends Controller
                 $action = "actualizado";
                 $restaurante = Restaurante::where('id', $id)->first();
             }
+
+            if(is_null($restaurante)) {
+                return response()->json([
+                    'title' => 'Error',
+                    'error' => 'No se ha encontrado el restaurante'
+                ], 404);
+            }
             
+            // Rellenamos los campos 
             $fields = $request->only($restaurante->getFillable());
             $restaurante->fill($fields);
     
             is_null($id) ? $restaurante->save() : $restaurante->update();
 
-            // return redirect()->route('home');
             return response()->json([
                 'title' => ucfirst($action),
                 'message' => 'Se ha '. $action .' el registro correctamente'
@@ -56,6 +68,7 @@ class RestauranteController extends Controller
         }
     }
 
+    // Eliminacion de un restaurante
     public function destroy($id) {
         try {
             $restaurante = Restaurante::find($id);

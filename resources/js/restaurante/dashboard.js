@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     Swal.fire({
                         title: data.title,
                         text: data.message,
-                        confirmButtonText: 'OK234',
+                        confirmButtonText: 'OK',
                         icon: 'success'
                     }).then(() => {
                         document.getElementById(`table-row-${id}`).remove()
@@ -54,65 +54,55 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Funcion para guardar un registro
-    restauranteForm.addEventListener('submit', function (e) {
+    // Crear/Editar un registro
+    restauranteForm.addEventListener('submit', async function (e) {
         e.preventDefault()
 
         // Obtenemos los datos del formulario
-        // const formData = new FormData(restauranteForm);
-        // const serializedData = [];
-        // formData.forEach((value, key) => {
-        //     serializedData.push({ name: key, value: value });
-        // });
-
         const formData = new FormData(restauranteForm);
         const data = {};
         formData.forEach((value, key) => {
             data[key] = value;
         });
 
-        options.method = 'POST';
-        // options.body = {nombre: 'german', telefono:'23232323'}; // Usar esta linea para provocar error y ver porque no sale el mensaje en el alert
         options.body = JSON.stringify(data);
 
-        const id = document.getElementById('restauranteId').value;
         let url = `/restaurante/store`;
-        url = id != "" ? `${url}/${id}` : url;
+        const id = document.getElementById('restauranteId').value;
+        if (id != "") { // Creando o Actualizando
+            url = `${url}/${id}`;
+            options.method ='PUT';
+        } else {
+            options.method = 'POST';
+        }
 
-        fetch(url, options)
-            .then(async response => {
-                const isJson = response.headers.get('content-type')?.includes('application/json');
-                const data = isJson && await response.json();
+        try {
+            const response = await fetch(url, options)
+            const data = await response.json();
 
-                // En caso de error lanzamos el catch
-                if (!response.ok) {
-                    const error = (data) || response.status;
-                    return Promise.reject(error);
-                }
+            // Manejamos los errores
+            if(!response.ok) {
+                showError(data)
+                return
+            }
 
-                Swal.fire({
-                    title: data.title,
-                    text: data.message,
-                    confirmButtonText: 'OK',
-                    icon: 'success'
-                }).then(() => {
-                    location.href = "/";
-                });
-
-            })
-            .catch(error => {
-                Swal.fire({
-                    title: error.title,
-                    text: error.message,
-                    icon: 'error'
-                })
+            // Operación realizada
+            Swal.fire({
+                title: data.title,
+                text: data.message,
+                confirmButtonText: 'OK',
+                icon: 'success'
+            }).then(() => {
+                location.href = "/"; // Redirigir al listado de restaurantes
             });
 
+        } catch (error) {
+            showError(error)
+        }
     })
 });
 
 function showError(data) {
-    console.log(data);
     let title = data.title ? data.title : "Error";
     let error = data.error ? data.error : "Ha ocurrido un error inesperado";
     Swal.fire({
