@@ -17,12 +17,12 @@ use App\Http\Controllers\RestauranteController;
 
 Auth::routes();
 
+// Ruta principal con el listado de restaurantes
 Route::get('/', [RestauranteController::class, 'index'])->name('home');
 
+// Rutas para manejar el CRUD de restaurante
 Route::prefix('restaurante')->group(function() {
     Route::get('/new', [RestauranteController::class, 'new']);
-    // Route::get('/getRestaurantes', [RestauranteController::class, 'getRestaurantes']);
-    // Route::get('/get/{id}', [RestauranteController::class, 'get']);
     Route::get('/edit/{id}', [RestauranteController::class, 'edit'])->name('editForm');
     Route::post('/store', [RestauranteController::class, 'store']);
     Route::put('/store/{id?}', [RestauranteController::class, 'store']);

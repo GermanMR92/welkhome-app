@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Restaurante;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class RestauranteController extends Controller
 {
@@ -32,6 +33,34 @@ class RestauranteController extends Controller
 
     // Creacion o edicion de un restaurante
     public function store(Request $request, $id = null) {
+        // Manejo de errores
+        $messages = [
+            'nombre.required' => 'El campo nombre es obligatorio',
+            'nombre.max' => 'El campo nombre no debe superar los :max caracteres',
+            'nombre.min' => 'El campo nombre no debe ser inferior a :min caracteres',
+
+            'direccion.required' => 'El campo dirección es obligatorio',
+            'direccion.max' => 'El campo dirección no debe superar los :max caracteres',
+            'direccion.min' => 'El campo dirección no debe ser inferior a :min caracteres',
+
+            'telefono.max' => 'El campo teléfono no debe superar los :max caracteres',
+        ];
+
+        $validator = Validator::make($request->all(), [
+            'nombre' => 'required|max:75|min:3',
+            'direccion' => 'required|max:150|min:3',
+            'telefono' => 'max:15',
+        ]);
+
+        $validator->setCustomMessages($messages);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'title' => 'Error',
+                'error' => $validator->errors()
+            ], 400);
+        }
+     
         try {
             // En caso de que el id sea nula creamos una instancia, de lo contrario buscamos en la BBDD el registro
             if(is_null($id)) {

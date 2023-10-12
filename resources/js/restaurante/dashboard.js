@@ -104,10 +104,22 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function showError(data) {
     let title = data.title ? data.title : "Error";
-    let error = data.error ? data.error : "Ha ocurrido un error inesperado";
+    let errorMessages = data.error ? data.error : "Ha ocurrido un error inesperado";
+
+    // En caso de venir multiples errores
+    if (typeof data.error == 'object') {
+        errorMessages = "";
+        let errores = data.error;
+        for (let campo in errores) {
+            if (errores.hasOwnProperty(campo)) {
+                errorMessages += `${errores[campo][0]}<br>`;
+            }
+        }
+    }
+
     Swal.fire({
         title: title,
-        text: error,
+        html: errorMessages,
         icon: 'error'
     })
 }
