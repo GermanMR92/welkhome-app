@@ -43,13 +43,14 @@ class RestauranteController extends Controller
             'direccion.max' => 'El campo dirección no debe superar los :max caracteres',
             'direccion.min' => 'El campo dirección no debe ser inferior a :min caracteres',
 
-            'telefono.max' => 'El campo teléfono no debe superar los :max caracteres',
+            'telefono.max' => 'El campo teléfono no debe superar los 15 caracteres',
+            'telefono.numeric' => 'El campo teléfono debe ser de tipo numérico'
         ];
 
         $validator = Validator::make($request->all(), [
             'nombre' => 'required|max:75|min:3',
             'direccion' => 'required|max:150|min:3',
-            'telefono' => 'max:15',
+            'telefono' => 'numeric|max:999999999999999' // 15 caracteres numéricos como máximo
         ]);
 
         $validator->setCustomMessages($messages);
