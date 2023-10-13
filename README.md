@@ -64,3 +64,19 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+
+## Instalación y arranque
+
+- Instalación de Laragon, el cual es un entorno de desarrollo que incluye la siguientes herramientas: Apache 2.4, Nginx, MySQL 8, PHP 8, Redis, Memcached, Node.js 18, npm, git
+- Instalar composer
+- Realizar un clonado del proyecto utilizando el comando "git clone + repositorio" en la ruta "C:\laragon\www" (O donde se encuentre la instalación de laragon)
+- Instalar las dependencias con el comando "composer i && npm i"
+- Crear una base de datos en laragon
+- Arrancar Laragon
+- Duplicar el archivo .env.example y denominarlo .env
+- Modificar las variables de entorno relacionadas a la conexión con la base de datos con el nombre designado a esta (Usualmente solo hará falta modificar la variable DB_DATABASE y DB_PASSWORD)
+- Ejecutar el comando "php artisan migrate" para ejecutar las migraciones que contienen la estructura necesaria de la BBDD y poder operar
+- Una vez esté todo instalado, en la raiz del proyecto ejecutar el comando "npm run dev"
+- Para acceder al proyecto desde el navegador habrá que poner en la URL el nombre de la carpeta de este seguido de ".test" (La que ha generado el comando git clone en la carpeta \laragon\www) por ejemplo, http://welkhome-app.test/
+- Con esto ya debería poder ver y operar en el proyecto.
