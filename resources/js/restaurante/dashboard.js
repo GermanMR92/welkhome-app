@@ -26,30 +26,9 @@ document.addEventListener('DOMContentLoaded', function () {
             cancelButtonText: 'Cancelar'
         }).then(async (result) => {
             if (result.isConfirmed) {
-                try {
-                    options.method = 'DELETE';
-                    const response = await fetch(`/restaurante/destroy/${id}`, options)
-                    const data = await response.json();
-
-                    // Manejamos los errores
-                    if (!response.ok) {
-                        showError(data)
-                        return;
-                    }
-
-                    // Se borra correctamente
-                    Swal.fire({
-                        title: data.title,
-                        text: data.message,
-                        confirmButtonText: 'OK',
-                        icon: 'success'
-                    }).then(() => {
-                        document.getElementById(`table-row-${id}`).remove()
-                    });
-
-                } catch (error) {
-                    showError(error)
-                }
+                fetchAction(`/restaurante/destroy/${id}`, 'DELETE', () => {
+                    document.getElementById(`table-row-${id}`).remove()
+                })
             }
         });
     }
@@ -68,37 +47,18 @@ document.addEventListener('DOMContentLoaded', function () {
         options.body = JSON.stringify(data);
 
         let url = `/restaurante/store`;
+        let method = null;
         const id = document.getElementById('restauranteId').value;
         if (id != "") { // Creando o Actualizando
             url = `${url}/${id}`;
-            options.method ='PUT';
+            method ='PUT';
         } else {
-            options.method = 'POST';
+            method = 'POST';
         }
 
-        try {
-            const response = await fetch(url, options)
-            const data = await response.json();
-
-            // Manejamos los errores
-            if(!response.ok) {
-                showError(data)
-                return
-            }
-
-            // Operación realizada
-            Swal.fire({
-                title: data.title,
-                text: data.message,
-                confirmButtonText: 'OK',
-                icon: 'success'
-            }).then(() => {
-                location.href = "/"; // Redirigir al listado de restaurantes
-            });
-
-        } catch (error) {
-            showError(error)
-        }
+        fetchAction(url, method, () => {
+            location.href = "/"; // Redirigir al listado de restaurantes
+        })
     })
 });
 
@@ -122,4 +82,36 @@ function showError(data) {
         html: errorMessages,
         icon: 'error'
     })
+}
+
+/*
+/ url = endpoint
+/ method = verbo de la accion
+/ callback = accion que queramos ejecutar al realizar la acción correctamente
+*/
+async function fetchAction(url, method, callback) {
+    try {
+        options.method = method;
+        const response = await fetch(url, options)
+        const data = await response.json();
+
+        // Manejamos los errores
+        if (!response.ok) {
+            showError(data)
+            return;
+        }
+
+        // Se borra correctamente
+        Swal.fire({
+            title: data.title,
+            text: data.message,
+            confirmButtonText: 'OK',
+            icon: 'success'
+        }).then(() => {
+            callback()
+        });
+
+    } catch (error) {
+        showError(error)
+    }
 }
